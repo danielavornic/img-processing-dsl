@@ -18,11 +18,10 @@ WHITESPACE: [ \t\r\n]+ -> skip;
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT: [0-9];
 // Parser rules
-start: startCommand commandSequence EOF;
+start: startCommand (commandSequence|help) EOF;
 commandSequence: image_param (PIPE command)*;
 image_param: IMG imageArg command;
 command:
-    help
     | crop
     | convert
     | rotate
