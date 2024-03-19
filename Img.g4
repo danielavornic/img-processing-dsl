@@ -22,7 +22,8 @@ start: startCommand commandSequence EOF;
 commandSequence: image_param (PIPE command)*;
 image_param: IMG imageArg command;
 command:
-    crop
+    help
+    | crop
     | convert
     | rotate
     | flipX
@@ -39,6 +40,7 @@ command:
     | ft
     | threshold;
 
+help: 'help';
 crop: 'crop' X NUMBER Y NUMBER W NUMBER H NUMBER;
 convert: 'convert' FORMAT IMAGE_TYPE;
 rotate: 'rotate' DEGREES NUMBER;
