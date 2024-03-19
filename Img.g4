@@ -1,11 +1,11 @@
 grammar Img;
 
 // Lexer rules
+startCommand: 'imp';
 ASSIGN: '=';
 DOT: '.';
 COMMA: ',';
 APOS: '"';
-SEMICOLON: ';';
 OPEN_PARAN: '(';
 CLOSED_PARAN: ')';
 OPEN: 'open';
@@ -18,11 +18,10 @@ WHITESPACE: [ \t\r\n]+ -> skip;
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT: [0-9];
 // Parser rules
-start: commandSequence EOF;
-commandSequence: firstCommand (PIPE command)* SEMICOLON?;
-firstCommand:  IMG imageArg imageCommand;
-command: imageCommand;
-imageCommand:
+start: startCommand commandSequence EOF;
+commandSequence: image_param (PIPE command)*;
+image_param: IMG imageArg command;
+command:
     crop
     | convert
     | rotate

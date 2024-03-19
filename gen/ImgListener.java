@@ -7,6 +7,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface ImgListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link ImgParser#startCommand}.
+	 * @param ctx the parse tree
+	 */
+	void enterStartCommand(ImgParser.StartCommandContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#startCommand}.
+	 * @param ctx the parse tree
+	 */
+	void exitStartCommand(ImgParser.StartCommandContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ImgParser#start}.
 	 * @param ctx the parse tree
 	 */
@@ -26,6 +36,16 @@ public interface ImgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCommandSequence(ImgParser.CommandSequenceContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ImgParser#image_param}.
+	 * @param ctx the parse tree
+	 */
+	void enterImage_param(ImgParser.Image_paramContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#image_param}.
+	 * @param ctx the parse tree
+	 */
+	void exitImage_param(ImgParser.Image_paramContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ImgParser#command}.
 	 * @param ctx the parse tree

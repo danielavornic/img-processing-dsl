@@ -10,6 +10,12 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface ImgVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link ImgParser#startCommand}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStartCommand(ImgParser.StartCommandContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ImgParser#start}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -21,6 +27,12 @@ public interface ImgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitCommandSequence(ImgParser.CommandSequenceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ImgParser#image_param}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImage_param(ImgParser.Image_paramContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ImgParser#command}.
 	 * @param ctx the parse tree
