@@ -88,6 +88,42 @@ public interface ImgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNegative(ImgParser.NegativeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ImgParser#colorize}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitColorize(ImgParser.ColorizeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ImgParser#blur}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlur(ImgParser.BlurContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ImgParser#sharpen}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSharpen(ImgParser.SharpenContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ImgParser#compress}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCompress(ImgParser.CompressContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ImgParser#ft}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFt(ImgParser.FtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ImgParser#threshold}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThreshold(ImgParser.ThresholdContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ImgParser#imageArg}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

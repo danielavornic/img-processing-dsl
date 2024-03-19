@@ -137,6 +137,66 @@ public interface ImgListener extends ParseTreeListener {
 	 */
 	void exitNegative(ImgParser.NegativeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ImgParser#colorize}.
+	 * @param ctx the parse tree
+	 */
+	void enterColorize(ImgParser.ColorizeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#colorize}.
+	 * @param ctx the parse tree
+	 */
+	void exitColorize(ImgParser.ColorizeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ImgParser#blur}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlur(ImgParser.BlurContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#blur}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlur(ImgParser.BlurContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ImgParser#sharpen}.
+	 * @param ctx the parse tree
+	 */
+	void enterSharpen(ImgParser.SharpenContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#sharpen}.
+	 * @param ctx the parse tree
+	 */
+	void exitSharpen(ImgParser.SharpenContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ImgParser#compress}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompress(ImgParser.CompressContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#compress}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompress(ImgParser.CompressContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ImgParser#ft}.
+	 * @param ctx the parse tree
+	 */
+	void enterFt(ImgParser.FtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#ft}.
+	 * @param ctx the parse tree
+	 */
+	void exitFt(ImgParser.FtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ImgParser#threshold}.
+	 * @param ctx the parse tree
+	 */
+	void enterThreshold(ImgParser.ThresholdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ImgParser#threshold}.
+	 * @param ctx the parse tree
+	 */
+	void exitThreshold(ImgParser.ThresholdContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ImgParser#imageArg}.
 	 * @param ctx the parse tree
 	 */
