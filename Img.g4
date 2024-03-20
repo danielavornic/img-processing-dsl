@@ -14,6 +14,8 @@ MINUS: '-';
 IMAGE_TYPE: 'png' | 'jpg' | 'bmp' | 'gif' | 'jpeg' | 'tiff' | 'webp';
 ID: ALPHA (ALPHA | DIGIT)*;
 WHITESPACE: [ \t\r\n]+ -> skip;
+BACKSLASH: '\\';
+DISK: ID ':';
 
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT: [0-9];
@@ -59,7 +61,7 @@ threshold: 'threshold'  LEVEL NUMBER;
 
 imageArg: filePath | folderPath;
 filePath: APOS ID DOT IMAGE_TYPE APOS;
-folderPath: APOS ID APOS;
+folderPath: APOS DISK BACKSLASH (ID BACKSLASH)+ ID APOS;
 COMMAND_RESULT: ID;
 
 // Tokens specific to commands
