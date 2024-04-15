@@ -39,7 +39,10 @@ command:
     | sharpen
     | compress
     | ft
-    | threshold;
+    | threshold
+    | reduceNoise
+    | remBg;
+        // enhance?
 
 help: 'help';
 crop: 'crop' X NUMBER Y NUMBER W NUMBER H NUMBER;
@@ -58,6 +61,8 @@ sharpen: 'sharpen'  LEVEL NUMBER;
 compress: 'compress' ;
 ft: 'ft' ;
 threshold: 'threshold'  LEVEL NUMBER;
+reduceNoise: 'reduceNoise';
+remBg: 'remBg';
 
 imageArg: filePath | folderPath;
 filePath: APOS ID DOT IMAGE_TYPE APOS;
