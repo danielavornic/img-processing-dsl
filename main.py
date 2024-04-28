@@ -22,8 +22,8 @@ command_visitor = CommandVisitor()
 command_visitor.visit(parse_tree)
 # # Execute the commands
 command_results = command_visitor.get_command_results()
-print(command_results)
-command_executor = CommandExecutor(command_results)
+# print(command_results)
+command_executor = CommandExecutor(command_results, image_path)
 command_executor.execute()
 #
 
