@@ -1,6 +1,7 @@
 from draft.ImageSaveLoader import ImageSaveLoader
 from draft.ImgBasicOperations import ImgBasicOperations
 from draft.ImgColorAdjustments import ImgColorAdjustments
+from draft.ImgAdvancedOperations import ImgAdvancedOperations
 
 
 class CommandExecutor:
@@ -12,7 +13,9 @@ class CommandExecutor:
     def execute(self):
         img_basic_operations = ImgBasicOperations()
         img_color_adjustments = ImgColorAdjustments()
+        img_advanced_operations = ImgAdvancedOperations()
         img_save_loader = ImageSaveLoader(self.image_path)
+
         self.img = img_save_loader.load()
 
         for index, command_result in enumerate(self.command_results):
@@ -55,6 +58,15 @@ class CommandExecutor:
                     img_save_loader.save(self.img, self.image_path)
             elif command == "negative":
                 self.img = img_color_adjustments.negative(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            # Advanced operations
+            elif command == "compress":
+                self.img = img_advanced_operations.compress(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "remBg":
+                self.img = img_advanced_operations.remBg(self.img)
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
 

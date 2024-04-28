@@ -52,4 +52,11 @@ class CommandVisitor(ImgVisitor):
         command = "negative"
         self.command_results.append(command)
 
+    def visitCompression(self, ctx:ImgParser.CompressContext):
+        command = "compress"
+        self.command_results.append(command)
+
+    def visitRemBg(self, ctx:ImgParser.RemBgContext):
+        command = "remBg"
+        self.command_results.append(command)
 
