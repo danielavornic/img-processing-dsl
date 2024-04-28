@@ -1,8 +1,8 @@
 from PIL import Image
 
 class ImgBasicOperations:
-    def crop(self, image, box):
-        return image.crop(box)
+    def crop(self, image, x, y, w, h):
+        return image.crop((x, y, x + w, y + h))
 
     def rotate(self, image, angle):
         return image.rotate(angle)

@@ -1,4 +1,5 @@
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageEnhance
+
 
 class ImgEnhancements:
     def blur(self, image, radius):

@@ -1,3 +1,6 @@
+from draft.ImgBasicOperations import ImgBasicOperations
+
+
 class CommandExecutor:
     def __init__(self, command_results):
         self.command_results = command_results
@@ -21,6 +24,10 @@ class CommandExecutor:
                     print("save")
             elif command == "flipX":
                 print("flipX")
+                if is_last_command:
+                    print("save")
+            elif command == "convert":
+                print("convert")
                 if is_last_command:
                     print("save")
 
