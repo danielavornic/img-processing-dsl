@@ -206,6 +206,24 @@ class ImgListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ImgParser#reduceNoise.
+    def enterReduceNoise(self, ctx:ImgParser.ReduceNoiseContext):
+        pass
+
+    # Exit a parse tree produced by ImgParser#reduceNoise.
+    def exitReduceNoise(self, ctx:ImgParser.ReduceNoiseContext):
+        pass
+
+
+    # Enter a parse tree produced by ImgParser#remBg.
+    def enterRemBg(self, ctx:ImgParser.RemBgContext):
+        pass
+
+    # Exit a parse tree produced by ImgParser#remBg.
+    def exitRemBg(self, ctx:ImgParser.RemBgContext):
+        pass
+
+
     # Enter a parse tree produced by ImgParser#imageArg.
     def enterImageArg(self, ctx:ImgParser.ImageArgContext):
         pass

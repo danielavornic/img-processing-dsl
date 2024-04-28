@@ -119,6 +119,16 @@ class ImgVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ImgParser#reduceNoise.
+    def visitReduceNoise(self, ctx:ImgParser.ReduceNoiseContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ImgParser#remBg.
+    def visitRemBg(self, ctx:ImgParser.RemBgContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ImgParser#imageArg.
     def visitImageArg(self, ctx:ImgParser.ImageArgContext):
         return self.visitChildren(ctx)

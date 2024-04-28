@@ -12,7 +12,7 @@ OPEN: 'open';
 NUMBER: MINUS? DIGIT+;
 MINUS: '-';
 IMAGE_TYPE: 'png' | 'jpg' | 'bmp' | 'gif' | 'jpeg' | 'tiff' | 'webp';
-ID: ALPHA (ALPHA | DIGIT)*;
+ID: (ALPHA | DIGIT | '_'|'-') (ALPHA | DIGIT | '_'|'-')*;
 WHITESPACE: [ \t\r\n]+ -> skip;
 BACKSLASH: '\\';
 DISK: ID ':';
@@ -65,7 +65,7 @@ reduceNoise: 'reduceNoise';
 remBg: 'remBg';
 
 imageArg: filePath | folderPath;
-filePath: APOS ID DOT IMAGE_TYPE APOS;
+filePath: APOS DISK (BACKSLASH (ID | DIGIT)*)* DOT IMAGE_TYPE APOS;
 folderPath: APOS DISK BACKSLASH (ID BACKSLASH)+ ID APOS;
 COMMAND_RESULT: ID;
 
