@@ -19,21 +19,26 @@ class ImageSaveLoader:
             print(f"Error loading image: {e}")
             return None
 
-    def save(self, image, filename):
-
-        """
-        Save the image with a new filename plus '_adjusted'.
-        """
+    def save(self, image, filename, format=None):
+        # Save the image with a new filename plus '_adjusted'
         if image:
             try:
-                new_filename = os.path.splitext(filename)[0] + "_adjusted" + os.path.splitext(filename)[1]
-                image.save(new_filename)
+                # Determine the new file extension based on the format
+                if format:
+                    extension = f".{format.lower()}"
+                else:
+                    extension = os.path.splitext(filename)[1]
+
+                # Update the filename with the correct extension
+                new_filename = os.path.splitext(filename)[0] + "_adjusted" + extension
+
+                # Save the image with the specified format
+                image.save(new_filename, format=format.upper() if format else None)
                 print(f"Image saved as {new_filename}")
             except Exception as e:
                 print(f"Error saving image: {e}")
         else:
             print("Image is None, cannot save.")
-
     def set_path(self, new_path):
         """
         Update the path to a new value.
