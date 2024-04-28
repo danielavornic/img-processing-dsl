@@ -1,5 +1,6 @@
 from draft.ImageSaveLoader import ImageSaveLoader
 from draft.ImgBasicOperations import ImgBasicOperations
+from draft.ImgColorAdjustments import ImgColorAdjustments
 
 
 class CommandExecutor:
@@ -10,6 +11,7 @@ class CommandExecutor:
 
     def execute(self):
         img_basic_operations = ImgBasicOperations()
+        img_color_adjustments = ImgColorAdjustments()
         img_save_loader = ImageSaveLoader(self.image_path)
         self.img = img_save_loader.load()
 
@@ -38,5 +40,22 @@ class CommandExecutor:
                 print("convert")
                 if is_last_command:
                     print("save")
+            # Color adjustments operations
+            elif command == "bw":
+                self.img = img_color_adjustments.bw(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "contrast":
+                self.img = img_color_adjustments.contrast(self.img, float(parameters[0]))
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "brightness":
+                self.img = img_color_adjustments.brightness(self.img, float(parameters[0]))
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "negative":
+                self.img = img_color_adjustments.negative(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
 
             #TODO: Add more commands here and complete with actual implementation

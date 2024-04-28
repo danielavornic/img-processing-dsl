@@ -12,3 +12,11 @@ class ImgAdvancedOperations:
     def upscale(self, image, scale_factor):
         # Implement upscaling logic
         return image
+
+    def colorize(self, image):
+        """
+        Colorize the image from black and white
+        :param image: The PIL image to colorize.
+        :return: The colorized image.
+        """
+        return image

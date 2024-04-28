@@ -40,4 +40,16 @@ class CommandVisitor(ImgVisitor):
         command = "bw"
         self.command_results.append(command)
 
+    def visitContrast(self, ctx:ImgParser.ContrastContext):
+        command = "contrast"
+        self.command_results.append(command)
+
+    def visitBrightness(self, ctx:ImgParser.BrightnessContext):
+        command = "brightness"
+        self.command_results.append(command)
+
+    def visitNegative(self, ctx:ImgParser.NegativeContext):
+        command = "negative"
+        self.command_results.append(command)
+
 
