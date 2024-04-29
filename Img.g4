@@ -16,6 +16,7 @@ ID: (ALPHA | DIGIT | '_'|'-') (ALPHA | DIGIT | '_'|'-')*;
 WHITESPACE: [ \t\r\n]+ -> skip;
 BACKSLASH: '\\';
 DISK: ID ':';
+FORWARD_SLASH: '/';
 
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT: [0-9];
@@ -65,8 +66,10 @@ reduceNoise: 'reduceNoise';
 remBg: 'remBg';
 
 imageArg: filePath | folderPath;
-filePath: APOS DISK (BACKSLASH (ID | DIGIT)*)* DOT IMAGE_TYPE APOS;
-folderPath: APOS DISK BACKSLASH (ID BACKSLASH)+ ID APOS;
+// handle unix and windows paths
+
+filePath: APOS (DISK (BACKSLASH (ID | DIGIT)*)* | FORWARD_SLASH (ID | DIGIT | FORWARD_SLASH)*) DOT IMAGE_TYPE APOS;
+folderPath: APOS (DISK (BACKSLASH (ID BACKSLASH)+ ID) | FORWARD_SLASH (ID FORWARD_SLASH)+ ID) APOS;
 COMMAND_RESULT: ID;
 
 // Tokens specific to commands
