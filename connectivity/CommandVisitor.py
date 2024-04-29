@@ -40,4 +40,20 @@ class CommandVisitor(ImgVisitor):
         command = "bw"
         self.command_results.append(command)
 
+    def visitBlur(self, ctx:ImgParser.BlurContext):
+        command = "blur"
+        self.command_results.append(command)
+
+    def visitSharpen(self, ctx:ImgParser.SharpenContext):
+        command = "sharpen"
+        self.command_results.append(command)
+
+    def visitThreshold(self, ctx:ImgParser.ThresholdContext):
+        command = "threshold"
+        self.command_results.append(command)
+
+    def visitReduceNoise(self, ctx:ImgParser.ReduceNoiseContext):
+        command = "reducenoise"
+        self.command_results.append(command)
+
 

@@ -1,5 +1,6 @@
 from draft.ImageSaveLoader import ImageSaveLoader
 from draft.ImgBasicOperations import ImgBasicOperations
+from draft.ImgEnhancements import ImgEnhancements
 
 
 class CommandExecutor:
@@ -10,6 +11,7 @@ class CommandExecutor:
 
     def execute(self):
         img_basic_operations = ImgBasicOperations()
+        img_enhancements = ImgEnhancements()
         img_save_loader = ImageSaveLoader(self.image_path)
         self.img = img_save_loader.load()
 
@@ -45,6 +47,22 @@ class CommandExecutor:
                     img_save_loader.save(self.img, self.image_path)
             elif command == "convert":
                 self.img = img_basic_operations.convert(self.img,self.image_path, parameters[0])
+            elif command == "blur":
+                self.img = img_enhancements.blur(self)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "sharpen":
+                self.img = img_enhancements.sharpen(self)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "threshold":
+                self.img = img_enhancements.threshold(self)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "reducenoise":
+                self.img = img_enhancements.reduceNoise(self)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
 
 
             #TODO: Add more commands here and complete with actual implementation
