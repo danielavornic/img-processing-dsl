@@ -68,13 +68,6 @@ class CommandExecutor:
                 self.img = img_enhancements.reduceNoise(self.img)
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
-
-
-
-                self.img = img_basic_operations.convert( self.img, self.image_path, parameters[0])
-                # if is_last_command:
-                #     print("save")
-            # Color adjustments operations
             elif command == "bw":
                 self.img = img_color_adjustments.bw(self.img)
                 if is_last_command:
