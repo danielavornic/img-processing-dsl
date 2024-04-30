@@ -1,4 +1,4 @@
-# Generated from D:/UTM/4_th_semester/DSL/img-processing-dsl/Img.g4 by ANTLR 4.13.1
+# Generated from /home/vornic/Work/img-processing-dsl/Img.g4 by ANTLR 4.13.1
 from antlr4 import *
 if "." in __name__:
     from .ImgParser import ImgParser
@@ -126,6 +126,11 @@ class ImgVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ImgParser#remBg.
     def visitRemBg(self, ctx:ImgParser.RemBgContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ImgParser#upscale.
+    def visitUpscale(self, ctx:ImgParser.UpscaleContext):
         return self.visitChildren(ctx)
 
 
