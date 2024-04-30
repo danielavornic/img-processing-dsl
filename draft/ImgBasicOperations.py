@@ -52,7 +52,7 @@ class ImgBasicOperations:
             raise ValueError("Width and height must be positive values.")
 
         try:
-            resized_image = image.resize((int(w), int(h)), Image.ANTIALIAS)
+            resized_image = image.resize((int(w), int(h)))
             return resized_image
         except Exception as e:
             raise RuntimeError(f"Error resizing image: {e}")

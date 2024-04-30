@@ -1,5 +1,7 @@
 from draft.ImageSaveLoader import ImageSaveLoader
 from draft.ImgBasicOperations import ImgBasicOperations
+from draft.ImgColorAdjustments import ImgColorAdjustments
+from draft.ImgAdvancedOperations import ImgAdvancedOperations
 from draft.ImgEnhancements import ImgEnhancements
 
 
@@ -12,6 +14,8 @@ class CommandExecutor:
     def execute(self):
         img_basic_operations = ImgBasicOperations()
         img_enhancements = ImgEnhancements()
+        img_color_adjustments = ImgColorAdjustments()
+        img_advanced_operations = ImgAdvancedOperations()
         img_save_loader = ImageSaveLoader(self.image_path)
         self.img = img_save_loader.load()
 
@@ -22,7 +26,8 @@ class CommandExecutor:
 
         for index, command_result in enumerate(self.command_results):
             command = command_result.split("--")[0].strip()
-            parameters = [param.split("=")[1] for param in command_result.split("--")[1:]]
+            parameters = [param.split("=")[1]
+                          for param in command_result.split("--")[1:]]
             is_last_command = index == len(self.command_results) - 1
 
             if command == "rotate":
@@ -65,3 +70,44 @@ class CommandExecutor:
                     img_save_loader.save(self.img, self.image_path)
 
 
+
+                self.img = img_basic_operations.convert( self.img, self.image_path, parameters[0])
+                # if is_last_command:
+                #     print("save")
+            # Color adjustments operations
+            elif command == "bw":
+                self.img = img_color_adjustments.bw(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "contrast":
+                self.img = img_color_adjustments.contrast(
+                    self.img, float(parameters[0]))
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "brightness":
+                self.img = img_color_adjustments.brightness(
+                    self.img, float(parameters[0]))
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "negative":
+                self.img = img_color_adjustments.negative(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            # Advanced operations
+            elif command == "compress":
+                self.img = img_advanced_operations.compress(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "remBg":
+                self.img = img_advanced_operations.remBg(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "upscale":
+                self.img = img_advanced_operations.upscale(
+                    self.img, float(parameters[0]))
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "colorize":
+                self.img = img_advanced_operations.colorize(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
