@@ -4,31 +4,39 @@ from PIL import Image
 
 
 class ImgBasicOperations:
+    def __init__(self, image):
+        self.image = image
 
-    def crop(self, image, x, y, w, h):
+    def crop(self, x, y, w, h):
         """
-        Crop the image to the specified coordinates.
+        Crop the image to the specified dimensions.
+        :param x: The x-coordinate of the top-left corner.
+        :param y: The y-coordinate of the top-left corner.
+        :param w: The width of the cropped image.
+        :param h: The height of the cropped image.
+        :return: The cropped PIL image.
         """
-        if image:
-            img_width, img_height = image.size
-            x1 = min(x, img_width)
-            y1 = min(y, img_height)
-            x2 = min(x + w, img_width)
-            y2 = min(y + h, img_height)
+        image = self.image
 
-            if x1 >= x2 or y1 >= y2:
-                raise ValueError("Invalid cropping coordinates.")
+        img_width, img_height = image.size
+        x1 = min(x, img_width)
+        y1 = min(y, img_height)
+        x2 = min(x + w, img_width)
+        y2 = min(y + h, img_height)
 
-            return image.crop((x1, y1, x2, y2))
-        else:
-            raise ValueError("Image is None.")
+        if x1 >= x2 or y1 >= y2:
+            raise ValueError("Invalid cropping coordinates.")
 
-    def rotate(self, image, angle):
+        return image.crop((x1, y1, x2, y2))
+
+    def rotate(self, angle):
         """
         Rotate the image by the specified angle.
+        :param angle: The angle to rotate the image by.
+        :return: The rotated PIL image.
         """
-        if not image:
-            raise ValueError("Image is None.")
+        image = self.image
+
         if not isinstance(angle, numbers.Number):
             raise ValueError("Angle must be an integer.")
 
@@ -37,13 +45,14 @@ class ImgBasicOperations:
         except Exception as e:
             raise ValueError(f"Error rotating image: {e}")
 
-
-    def resize(self, image, w, h):
+    def resize(self, w, h):
         """
         Resize the image to the specified dimensions.
+        :param w: The target width.
+        :param h: The target height.
+        :return: The resized PIL image.
         """
-        if not image:
-            raise ValueError("Image is None, cannot resize.")
+        image = self.image
 
         if not isinstance(w, numbers.Number) or not isinstance(h, numbers.Number):
             raise TypeError("Width and height must be numeric values.")
@@ -57,47 +66,41 @@ class ImgBasicOperations:
         except Exception as e:
             raise RuntimeError(f"Error resizing image: {e}")
 
-    def flipX(self, image):
+    def flipX(self):
         """
         Flip the image horizontally (left to right).
+        :return: The horizontally flipped PIL image.
         """
         # Ensure the image is not None
-        if not image:
-            raise ValueError("Image is None, cannot flip horizontally.")
+        image = self.image
 
         try:
             return image.transpose(Image.FLIP_LEFT_RIGHT)
         except Exception as e:
             raise RuntimeError(f"Error flipping image horizontally: {e}")
 
-    def flipY(self, image):
+    def flipY(self):
         """
         Flip the image vertically (top to bottom).
+        :return: The vertically flipped PIL image.
         """
-        # Ensure the image is not None
-        if not image:
-            raise ValueError("Image is None, cannot flip vertically.")
 
+        image = self.image
         try:
             return image.transpose(Image.FLIP_TOP_BOTTOM)
         except Exception as e:
             raise RuntimeError(f"Error flipping image vertically: {e}")
 
-    def convert(self, image, image_path, target_format):
+    def convert(self, image_path, target_format):
         """
         Convert the image to the specified format and save it.
-
-        :param image: The input image.
         :param image_path: The path of the original image.
         :param target_format: The target format for conversion.
         :raises ValueError: If the image is None or the target format is invalid.
         :raises RuntimeError: If there's an error during the conversion or saving process.
         """
-        if image is None:
-            raise ValueError("Image is None, cannot convert.")
-
+        image = self.image
         target_format = target_format.upper()
-
 
         try:
             # Apply specific conversions based on the target format

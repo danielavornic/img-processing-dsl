@@ -18,49 +18,56 @@ POINTS = os.path.join(parent_dir, "model", "pts_in_hull.npy")
 
 
 class ImgAdvancedOperations:
-    def compress(self, image):
+    def __init__(self, image):
+        self.image = image
+
+    def compress(self, image_format):
         """
-        Compress the image using lossless compression.
-        :param image: The PIL image to compress.
+        Compress the image using the specified format.
+        :param image_format: The format to save the image as (e.g., 'JPEG', 'PNG').
         :return: The compressed image.
         """
-        if image is None:
-            raise ValueError("Image must not be None.")
+        image = self.image
+
+        image_format = image_format.upper()
+        if image_format not in Image.registered_extensions().values():
+            raise ValueError(f"Unsupported image format for compression: {image_format}")
+
+        if image.mode in ('RGBA', 'LA'):
+            # Assuming a white background for images with transparency
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            background.paste(image, mask=image.split()[3])  # 3 is the index of the alpha channel
+            image = background
+        elif image.mode != 'RGB' and image_format == 'JPEG':
+            image = image.convert('RGB')
 
         buffer = io.BytesIO()
-        image.save(buffer, format=image.format)
+        image.save(buffer, format=image_format)
         buffer.seek(0)
         compressed_image = Image.open(buffer)
 
         return compressed_image
 
-    def remBg(self, image):
+    def remBg(self):
         """
         Remove the background from the image.
-        :param image: The PIL image to remove the background from.
         :return: The image with the background removed.
         """
-        if image is None:
-            raise ValueError("Image must not be None.")
-
-        removed_bg = remove(image).convert("RGB")
+        removed_bg = remove(self.image).convert("RGB")
 
         return removed_bg
 
-    def upscale(self, image, lvl):
+    def upscale(self, lvl):
         """
         Upscale the image using a super-resolution model.
-        :param image: The PIL image to upscale.
         :param lvl: The level of upscaling (e.g., 1, 2, 4, 8).
         :return: The upscaled image.
         """
-        if image is None:
-            raise ValueError("Image must not be None.")
 
         if lvl not in [1, 2, 4, 8]:
             raise ValueError("Scale factor must be a power of 2 (e.g., 1, 2, 4, 8).")
 
-        image_tensor = TF.to_tensor(image).unsqueeze(0)
+        image_tensor = TF.to_tensor(self.image).unsqueeze(0)
         sr_model = torchsr.models.carn(pretrained=True, scale=int(lvl))
 
         with torch.no_grad():
@@ -70,14 +77,11 @@ class ImgAdvancedOperations:
 
         return upscaled_image
 
-    def colorize(self, image):
+    def colorize(self):
         """
         Colorize the image from black and white
-        :param image: The PIL image to colorize.
         :return: The colorized image.
         """
-        if image is None:
-            raise ValueError("Image must not be None.")
 
         net = cv2.dnn.readNetFromCaffe(PROTOTXT, MODEL)
         pts = np.load(POINTS)
@@ -89,7 +93,7 @@ class ImgAdvancedOperations:
         net.getLayer(class8).blobs = [pts.astype("float32")]
         net.getLayer(conv8).blobs = [np.full([1, 313], 2.606, dtype="float32")]
 
-        image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        image = cv2.cvtColor(np.array(self.image), cv2.COLOR_RGB2BGR)
         scaled = image.astype("float32") / 255.0
         lab = cv2.cvtColor(scaled, cv2.COLOR_BGR2LAB)
 

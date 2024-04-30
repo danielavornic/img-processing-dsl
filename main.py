@@ -2,29 +2,30 @@ from connectivity.CommandParser import CommandParser
 from connectivity.CommandVisitor import CommandVisitor
 from connectivity.CommandExecutor import CommandExecutor
 from connectivity.ImagePathVisitor import ImagePathVisitor
-from gen.ImgParser import ImgParser
-
-# Get user input dynamically
-user_input = input("Enter your image processing command: ")
 
 
-# Parse the user input
-command_parser = CommandParser(user_input)
-parse_tree = command_parser.parse()
+def main():
+    user_input = 'imp --img="/home/vornic/Work/img-processing-dsl/test_img/kittens.jpg" flipX -> contrast --lvl=150 -> bw -> remBg'
 
-image_visitor = ImagePathVisitor()
-image_visitor.visit(parse_tree)
-image_path = image_visitor.get_image_path()
-# Extract the image path from the parse tree
-image_path = image_path.split('"')[1]
-# Visit the parse tree
-command_visitor = CommandVisitor()
-command_visitor.visit(parse_tree)
-# # Execute the commands
-command_results = command_visitor.get_command_results()
-# print(command_results)
-command_executor = CommandExecutor(command_results, image_path)
-command_executor.execute()
-#
+    # Parse the user input
+    command_parser = CommandParser(user_input)
+    parse_tree = command_parser.parse()
 
-#imp --img="D:\UTM\4_th_semester\DSL\img-processing-dsl\parseTree_adjusted.jpg" rotate --deg=90 -> resize --w=100 --h=100
+    # Get the image path
+    image_visitor = ImagePathVisitor()
+    image_visitor.visit(parse_tree)
+    image_path = image_visitor.get_image_path()
+    image_path = image_path.split('"')[1]
+
+    # Visit the parse tree
+    command_visitor = CommandVisitor()
+    command_visitor.visit(parse_tree)
+
+    # Execute the commands
+    command_results = command_visitor.get_command_results()
+    command_executor = CommandExecutor(command_results, image_path)
+    command_executor.execute()
+
+
+if __name__ == "__main__":
+    main()
