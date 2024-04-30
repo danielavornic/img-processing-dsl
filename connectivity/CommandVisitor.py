@@ -60,3 +60,11 @@ class CommandVisitor(ImgVisitor):
         command = "remBg"
         self.command_results.append(command)
 
+    def visitUpscale(self, ctx:ImgParser.UpscaleContext):
+        command = "upscale"
+        self.command_results.append(command)
+
+    def visitColorize(self, ctx:ImgParser.ColorizeContext):
+        command = "colorize"
+        self.command_results.append(command)
+

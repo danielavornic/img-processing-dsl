@@ -54,9 +54,9 @@ class CommandExecutor:
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
             elif command == "convert":
-                print("convert")
-                if is_last_command:
-                    print("save")
+                self.img = img_basic_operations.convert( self.img, self.image_path, parameters[0])
+                # if is_last_command:
+                #     print("save")
             # Color adjustments operations
             elif command == "bw":
                 self.img = img_color_adjustments.bw(self.img)
@@ -85,7 +85,12 @@ class CommandExecutor:
                 self.img = img_advanced_operations.remBg(self.img)
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
-                self.img = img_basic_operations.convert(
-                    self.img, self.image_path, parameters[0])
-
-            # TODO: Add more commands here and complete with actual implementation
+            elif command == "upscale":
+                self.img = img_advanced_operations.upscale(
+                    self.img, float(parameters[0]))
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)
+            elif command == "colorize":
+                self.img = img_advanced_operations.colorize(self.img)
+                if is_last_command:
+                    img_save_loader.save(self.img, self.image_path)

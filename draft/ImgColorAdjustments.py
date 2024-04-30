@@ -7,6 +7,9 @@ class ImgColorAdjustments:
         :param image: The PIL image to convert to black and white.
         :return: The black and white image.
         """
+        if image is None:
+            raise ValueError("Image must not be None.")
+
         return image.convert("L")
 
     def contrast(self, image, lvl):

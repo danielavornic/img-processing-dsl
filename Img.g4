@@ -42,7 +42,8 @@ command:
     | ft
     | threshold
     | reduceNoise
-    | remBg;
+    | remBg
+    | upscale;
         // enhance?
 
 help: 'help';
@@ -64,6 +65,7 @@ ft: 'ft' ;
 threshold: 'threshold'  LEVEL NUMBER;
 reduceNoise: 'reduceNoise';
 remBg: 'remBg';
+upscale: 'upscale' LEVEL NUMBER;
 
 imageArg: filePath | folderPath;
 // handle unix and windows paths
