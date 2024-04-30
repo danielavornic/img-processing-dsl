@@ -27,4 +27,4 @@ command_executor = CommandExecutor(command_results, image_path)
 command_executor.execute()
 #
 
-#imp --img="image.png" rotate --deg=90 -> convert --format=jng
+#imp --img="D:\UTM\4_th_semester\DSL\img-processing-dsl\parseTree_adjusted.jpg" rotate --deg=90 -> resize --w=100 --h=100
