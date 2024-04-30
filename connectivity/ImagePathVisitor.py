@@ -11,7 +11,6 @@ class ImagePathVisitor(ImgVisitor):
         #the param between the --img="param" is the image path
         self.image_path = ctx.getText().split("=")[1]
 
-
         return self.image_path
 
     def get_image_path(self):

@@ -1,4 +1,4 @@
-# Generated from D:/UTM/4_th_semester/DSL/img-processing-dsl/Img.g4 by ANTLR 4.13.1
+# Generated from /home/vornic/Work/img-processing-dsl/Img.g4 by ANTLR 4.13.1
 from antlr4 import *
 if "." in __name__:
     from .ImgParser import ImgParser
@@ -221,6 +221,15 @@ class ImgListener(ParseTreeListener):
 
     # Exit a parse tree produced by ImgParser#remBg.
     def exitRemBg(self, ctx:ImgParser.RemBgContext):
+        pass
+
+
+    # Enter a parse tree produced by ImgParser#upscale.
+    def enterUpscale(self, ctx:ImgParser.UpscaleContext):
+        pass
+
+    # Exit a parse tree produced by ImgParser#upscale.
+    def exitUpscale(self, ctx:ImgParser.UpscaleContext):
         pass
 
 
