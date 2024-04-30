@@ -1,38 +1,39 @@
-from PIL import Image, ImageFilter, ImageEnhance
+import numpy as np
+from PIL import Image, ImageFilter, ImageEnhance, ImageOps
 import cv2
 
 class ImgEnhancements:
-    def blur(self, image, radius):
+    def blur(self, image, level):
         """
-        Applies a blur effect with a specified radius to the image.
-        Radius must be >= 0
-        """
-        if radius < 0:
-            raise ValueError("radius must be >= 0")
+        Blurs the image
 
-        return image.filter(ImageFilter.BoxBlur(radius))
+        """
+        return image.filter(ImageFilter.GaussianBlur(radius=level))
     #
-    def sharpen(self, image):
+    def sharpen(self, image, sharpness_factor):
         """
         Sharpens the image
         """
-        enhancer = image.filter(ImageFilter.SHARPEN)
-        return enhancer
+        enhancer = ImageEnhance.Sharpness(image)
+        sharpened_image = enhancer.enhance(sharpness_factor)
+        return sharpened_image
 
-    def threshold(self, image):
+    def threshold(self, image, level):
         """
-        Applies a threshold filter to the image.
-        This generally results in a bilevel image at the end, where the image is composed of black and white pixels.
+        Converts the image to a binary image. All pixels with a value above the level are set to 255, all others to 0.
         """
         # open cv face asta, dar hz daca se poate de returnat not in pil, si cv2 citeste incorect imaginea
-        img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        ret, thresh = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
-        return thresh
+        gray_image = ImageOps.grayscale(image)
+        return gray_image.point(lambda x: 255 if x > level else 0, '1')
 
     def reduceNoise(self, image):
         """
         Reduces noise from the image. Works with a color image.
-        The command is 'reducenoise'
         """
-        image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
-        return image
+        cv2_image = np.array(image)
+        cv2_image = cv2.cvtColor(cv2_image, cv2.COLOR_RGB2BGR)
+        cv2_image = cv2.fastNlMeansDenoisingColored(cv2_image, None, 10, 10, 7, 21)
+
+        return Image.fromarray(cv2.cvtColor(cv2_image, cv2.COLOR_BGR2RGB))
+
+

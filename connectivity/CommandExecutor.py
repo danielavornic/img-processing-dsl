@@ -48,21 +48,20 @@ class CommandExecutor:
             elif command == "convert":
                 self.img = img_basic_operations.convert(self.img,self.image_path, parameters[0])
             elif command == "blur":
-                self.img = img_enhancements.blur(self)
+                self.img = img_enhancements.blur(self.img, int(parameters[0]))
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
             elif command == "sharpen":
-                self.img = img_enhancements.sharpen(self)
+                self.img = img_enhancements.sharpen(self.img, int(parameters[0]))
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
             elif command == "threshold":
-                self.img = img_enhancements.threshold(self)
+                self.img = img_enhancements.threshold(self.img, int(parameters[0]))
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
-            elif command == "reducenoise":
-                self.img = img_enhancements.reduceNoise(self)
+            elif command == "reduceNoise":
+                self.img = img_enhancements.reduceNoise(self.img)
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
 
 
-            #TODO: Add more commands here and complete with actual implementation
