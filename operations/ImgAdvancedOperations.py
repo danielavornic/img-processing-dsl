@@ -1,3 +1,5 @@
+import sys
+
 import torch
 from PIL import Image
 import io
@@ -31,7 +33,7 @@ class ImgAdvancedOperations:
 
         image_format = image_format.upper()
         if image_format not in Image.registered_extensions().values():
-            raise ValueError(f"Unsupported image format for compression: {image_format}")
+            print(f"Unsupported image format for compression: {image_format}", file=sys.stderr)
 
         if image.mode in ('RGBA', 'LA'):
             # Assuming a white background for images with transparency
@@ -65,7 +67,7 @@ class ImgAdvancedOperations:
         """
 
         if lvl not in [1, 2, 4, 8]:
-            raise ValueError("Scale factor must be a power of 2 (e.g., 1, 2, 4, 8).")
+            print("Scale factor must be a power of 2 (e.g., 1, 2, 4, 8).", file=sys.stderr)
 
         image_tensor = TF.to_tensor(self.image).unsqueeze(0)
         sr_model = torchsr.models.carn(pretrained=True, scale=int(lvl))

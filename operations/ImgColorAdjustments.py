@@ -19,7 +19,7 @@ class ImgColorAdjustments:
         :return: The image with the adjusted contrast.
         """
         if lvl < 0 or lvl > 500:
-            raise ValueError("Contrast level must be in the range [0, 500].")
+            print("Contrast level must be in the range [0, 500].", file=sys.stderr)
 
         factor = lvl / 100
         enhancer = ImageEnhance.Contrast(self.image)
@@ -32,7 +32,7 @@ class ImgColorAdjustments:
         :return: The image with the adjusted brightness.
         """
         if lvl < 0 or lvl > 500:
-            raise ValueError("Brightness level must be in the range [0, 500].")
+            print("Brightness level must be in the range [0, 500].", file=sys.stderr)
 
         factor = lvl / 100
         enhancer = ImageEnhance.Brightness(self.image)

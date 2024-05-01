@@ -1,3 +1,5 @@
+import sys
+
 from operations.ImageSaveLoader import ImageSaveLoader
 from operations.ImgBasicOperations import ImgBasicOperations
 from operations.ImgColorAdjustments import ImgColorAdjustments
@@ -17,7 +19,7 @@ class CommandExecutor:
         self.img = img_save_loader.load()
 
         if not self.img:
-            raise ValueError("Image is None.")
+            print("Image is None.", file=sys.stderr)
 
         img_basic_operations = ImgBasicOperations(self.img)
         img_enhancements = ImgEnhancements(self.img)
@@ -109,3 +111,5 @@ class CommandExecutor:
                 self.img = img_advanced_operations.colorize()
                 if is_last_command:
                     img_save_loader.save(self.img, self.image_path)
+
+

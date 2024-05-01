@@ -1,3 +1,5 @@
+import sys
+
 from PIL import Image
 import os
 
@@ -13,10 +15,10 @@ class ImageSaveLoader:
             image = Image.open(self.path)
             return image
         except FileNotFoundError:
-            print(f"Error: File not found at {self.path}")
+            print(f"Error: File not found at {self.path}", file=sys.stderr)
             return None
         except Exception as e:
-            print(f"Error loading image: {e}")
+            print(f"Error loading image: {e}", file=sys.stderr)
             return None
 
     def save(self, image, filename, format=None):
@@ -36,12 +38,10 @@ class ImageSaveLoader:
                 image.save(new_filename, format=format.upper() if format else None)
                 print(f"Image saved as {new_filename}")
             except Exception as e:
-                print(f"Error saving image: {e}")
-        else:
-            print("Image is None, cannot save.")
+                print(f"Error saving image: {e}", file=sys.stderr)
+
     def set_path(self, new_path):
         """
         Update the path to a new value.
         """
         self.path = new_path
-        print(f"Path updated to {self.path}")

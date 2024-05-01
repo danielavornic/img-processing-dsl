@@ -1,4 +1,5 @@
 import numbers
+import sys
 
 from PIL import Image
 
@@ -25,7 +26,7 @@ class ImgBasicOperations:
         y2 = min(y + h, img_height)
 
         if x1 >= x2 or y1 >= y2:
-            raise ValueError("Invalid cropping coordinates.")
+            print("Invalid cropping coordinates.", file=sys.stderr)
 
         return image.crop((x1, y1, x2, y2))
 
@@ -38,12 +39,12 @@ class ImgBasicOperations:
         image = self.image
 
         if not isinstance(angle, numbers.Number):
-            raise ValueError("Angle must be an integer.")
+            print("Angle must be an integer.", file=sys.stderr)
 
         try:
             return image.rotate(angle)
         except Exception as e:
-            raise ValueError(f"Error rotating image: {e}")
+            print(f"Error rotating image: {e}", file=sys.stderr)
 
     def resize(self, w, h):
         """
@@ -55,16 +56,16 @@ class ImgBasicOperations:
         image = self.image
 
         if not isinstance(w, numbers.Number) or not isinstance(h, numbers.Number):
-            raise TypeError("Width and height must be numeric values.")
+            print("Width and height must be numeric values.", file=sys.stderr)
 
         if w <= 0 or h <= 0:
-            raise ValueError("Width and height must be positive values.")
-
-        try:
-            resized_image = image.resize((int(w), int(h)))
-            return resized_image
-        except Exception as e:
-            raise RuntimeError(f"Error resizing image: {e}")
+            print("Width and height must be positive values.", file=sys.stderr)
+        else:
+            try:
+                resized_image = image.resize((int(w), int(h)))
+                return resized_image
+            except Exception as e:
+                print(f"Error resizing image: {e}", file=sys.stderr)
 
     def flipX(self):
         """
@@ -77,7 +78,7 @@ class ImgBasicOperations:
         try:
             return image.transpose(Image.FLIP_LEFT_RIGHT)
         except Exception as e:
-            raise RuntimeError(f"Error flipping image horizontally: {e}")
+            print(f"Error flipping image horizontally: {e}", file=sys.stderr)
 
     def flipY(self):
         """
@@ -89,7 +90,7 @@ class ImgBasicOperations:
         try:
             return image.transpose(Image.FLIP_TOP_BOTTOM)
         except Exception as e:
-            raise RuntimeError(f"Error flipping image vertically: {e}")
+            print(f"Error flipping image vertically: {e}", file=sys.stderr)
 
     def convert(self, image_path, target_format):
         """
@@ -131,4 +132,4 @@ class ImgBasicOperations:
             return new_filename
 
         except Exception as e:
-            raise RuntimeError(f"Error converting image: {e}")
+            print(f"Error converting image: {e}", file=sys.stderr)
