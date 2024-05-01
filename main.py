@@ -12,23 +12,22 @@ class Main:
     def help_command(self):
         help_str = """
         Available Commands:
-        - rotate <degrees>: Rotate the image by specified degrees.
-        - resize <width> <height>: Resize the image to specified width and height.
-        - crop <top> <left> <bottom> <right>: Crop the image within the specified coordinates.
+        - rotate --deg=<int>: Rotate the image by specified degrees.
+        - resize --w=<int> --h=<int>: Resize the image to specified width and height.
+        - crop --x=<int> --y=<int> --w=<int> --h=<int>: Crop the image to specified dimensions.
         - flipX: Flip the image horizontally.
         - flipY: Flip the image vertically.
-        - convert <format>: Convert the image to the specified format.
-        - blur <radius>: Apply a blur effect with the specified radius.
-        - sharpen <radius>: Apply a sharpening effect with the specified radius.
-        - threshold <value>: Apply a threshold effect with the specified value.
+        - convert --format=<format>: Convert the image to the specified format.
+        - blur --lvl=<int>: Apply a blur effect with the specified radius.
+        - sharpen --lvl=<int>: Apply a sharpening effect with the specified radius.
+        - threshold --lvl=<int>: Apply a threshold effect with the specified value.
         - reduceNoise: Reduce noise in the image.
         - bw: Convert the image to black and white.
-        - contrast <factor>: Adjust the contrast by the specified factor.
-        - brightness <factor>: Adjust the brightness by the specified factor.
+        - contrast --lvl=<int>: Adjust the contrast by the specified factor.
+        - brightness --lvl=<int>: Adjust the brightness by the specified factor.
         - negative: Convert the image to its negative.
         - compress: Compress the image based on its format.
         - remBg: Remove the background from the image.
-        - upscale <factor>: Upscale the image by the specified factor.
         - colorize: Colorize the image.
         """
         print(help_str)
