@@ -39,7 +39,7 @@ Available Commands:
 - compress: Compress the image based on its format.
 - remBg: Remove the background from the image.
 - colorize: Colorize a grayscale image.
-- upscale --lvl<int>: Upscale the image. lvl flag is can be 2, 4, 8.
+- upscale --lvl<int>: Upscale the image. lvl flag can be 2, 4, 8.
 ```
 Note that the system recognizes the DSL's command if and only if it begins with the reserved word `imp`, that signifies the beginning of an instruction, followed by the `--img` flag, which specifies the path to the image. 
 
