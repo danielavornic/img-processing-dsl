@@ -29,7 +29,7 @@ class Main:
         - compress: Compress the image based on its format.
         - remBg: Remove the background from the image.
         - colorize: Colorize a grayscale image.
-        - upscale --lvl: Upscale the image. lvl flag is can be 2, 4, 8.
+        - upscale --lvl=<int>: Upscale the image. lvl flag is can be 2, 4, 8.
         """
         print(help_str)
 
