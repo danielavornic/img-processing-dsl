@@ -1,0 +1,7 @@
+numpy==1.26.4
+opencv_python_headless==4.9.0.80
+Pillow==10.3.0
+rembg==2.0.56
+torch==2.3.0
+torchsr==1.0.4
+torchvision==0.18.0
