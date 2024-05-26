@@ -3,35 +3,13 @@ from connectivity.CommandParser import CommandParser
 from connectivity.CommandVisitor import CommandVisitor
 from connectivity.CommandExecutor import CommandExecutor
 from connectivity.ImagePathVisitor import ImagePathVisitor
-from gen.ImgParser import ImgParser
+from operations.ImgHelperOperations import ImgHelperOperations
+
 
 class Main:
     def __init__(self):
         self.running = True
-
-    def help_command(self):
-        help_str = """
-        Available Commands:
-        - rotate --deg=<int>: Rotate the image by specified degrees.
-        - resize --w=<int> --h=<int>: Resize the image to specified width and height in pixels.
-        - crop --x=<int> --y=<int> --w=<int> --h=<int>: Crop the image to specified dimensions in pixels.
-        - flipX: Flip the image horizontally.
-        - flipY: Flip the image vertically.
-        - convert --format=<format>: Convert the image to the specified format not in double quotes (png, jpg, jpeg, webp, tiff).
-        - blur --lvl=<int>: Apply a blur effect with the specified radius.
-        - sharpen --lvl=<int>: Apply a sharpening effect with the specified radius.
-        - threshold --lvl=<int>: Apply a threshold effect with the specified value.
-        - reduceNoise: Reduce noise in the image.
-        - bw: Convert the image to black and white.
-        - contrast --lvl=<int>: Adjust the contrast by the specified factor. 100 is the default.
-        - brightness --lvl=<int>: Adjust the brightness by the specified factor. 100 is the default.
-        - negative: Convert the image to its negative.
-        - compress: Compress the image based on its format.
-        - remBg: Remove the background from the image.
-        - colorize: Colorize a grayscale image.
-        - upscale --lvl=<int>: Upscale the image. lvl flag can be 2, 4, 8.
-        """
-        print(help_str)
+        self.helper = ImgHelperOperations()
 
     def run(self):
         print("Enter your command (type 'imp help' for available commands)")
@@ -54,12 +32,19 @@ class Main:
             image_visitor = ImagePathVisitor()
             image_visitor.visit(parse_tree)
             image_path = image_visitor.get_image_path()
+            folder_path = image_visitor.get_folder_path()
+            is_folder = folder_path is not None
 
-            if image_path is None and command_results[0] == "help":
-                self.help_command()
+            path = None
+            if image_path is not None:
+                path = image_path
+            elif is_folder:
+                path = folder_path
+
+            if path is None and command_results[0] == "help":
+                self.helper.print_help()
             else:
-                image_path = image_path.split('"')[1]
-                command_executor = CommandExecutor(command_results,image_path)
+                command_executor = CommandExecutor(command_results, path, is_folder=is_folder)
                 command_executor.execute()
 
 

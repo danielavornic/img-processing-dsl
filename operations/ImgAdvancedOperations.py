@@ -33,31 +33,44 @@ class ImgAdvancedOperations:
 
         image_format = image_format.upper()
         if image_format not in Image.registered_extensions().values():
-            print(f"Unsupported image format for compression: {image_format}", file=sys.stderr)
+            print(f"Unsupported image format for compression: {image_format}. It will be saved in the original format.", file=sys.stderr)
+            return image
 
-        if image.mode in ('RGBA', 'LA'):
-            # Assuming a white background for images with transparency
-            background = Image.new('RGB', image.size, (255, 255, 255))
-            background.paste(image, mask=image.split()[3])  # 3 is the index of the alpha channel
-            image = background
-        elif image.mode != 'RGB' and image_format == 'JPEG':
-            image = image.convert('RGB')
+        try:
+            if image.mode in ('RGBA', 'LA'):
+                # Assuming a white background for images with transparency
+                background = Image.new('RGB', image.size, (255, 255, 255))
+                background.paste(image, mask=image.split()[3])  # 3 is the index of the alpha channel
+                image = background
+            elif image.mode != 'RGB' and image_format == 'JPEG':
+                image = image.convert('RGB')
 
-        buffer = io.BytesIO()
-        image.save(buffer, format=image_format)
-        buffer.seek(0)
-        compressed_image = Image.open(buffer)
+            buffer = io.BytesIO()
+            image.save(buffer, format=image_format, optimize=True, quality=90)
+            buffer.seek(0)
+            compressed_image = Image.open(buffer)
 
-        return compressed_image
+            return compressed_image
+
+        except Exception as e:
+            print(f"Error compressing image: {e}", file=sys.stderr)
+            return image
 
     def remBg(self):
         """
         Remove the background from the image.
         :return: The image with the background removed.
         """
-        removed_bg = remove(self.image, bgcolor=(255, 255, 255, 0)).convert("RGBA")
+        try:
+            if self.image.format not in ["JPEG", "JPG"]:
+                removed_bg = remove(self.image, bgcolor=(255, 255, 255, 0)).convert("RGBA")
+            else:
+                removed_bg = remove(self.image, bgcolor=(255, 255, 255, 1)).convert("RGB")
+            return removed_bg
 
-        return removed_bg
+        except Exception as e:
+            print(f"Error removing background: {e}", file=sys.stderr)
+            return self.image
 
     def upscale(self, lvl):
         """
@@ -68,53 +81,61 @@ class ImgAdvancedOperations:
 
         if lvl not in [1, 2, 4, 8]:
             print("Scale factor must be a power of 2 (e.g., 1, 2, 4, 8).", file=sys.stderr)
+            return self.image
 
-        image_tensor = TF.to_tensor(self.image).unsqueeze(0)
-        sr_model = torchsr.models.carn(pretrained=True, scale=int(lvl))
+        try:
+            image_tensor = TF.to_tensor(self.image).unsqueeze(0)
+            sr_model = torchsr.models.carn(pretrained=True, scale=int(lvl))
 
-        with torch.no_grad():
-            upscaled_image_tensor = sr_model(image_tensor)
+            with torch.no_grad():
+                upscaled_image_tensor = sr_model(image_tensor)
+            upscaled_image = TF.to_pil_image(upscaled_image_tensor.squeeze(0))
 
-        upscaled_image = TF.to_pil_image(upscaled_image_tensor.squeeze(0))
+            return upscaled_image
 
-        return upscaled_image
+        except Exception as e:
+            print(f"Error upscaling image: {e}", file=sys.stderr)
+            return self.image
 
     def colorize(self):
         """
         Colorize the image from black and white
         :return: The colorized image.
         """
+        try:
+            net = cv2.dnn.readNetFromCaffe(PROTOTXT, MODEL)
+            pts = np.load(POINTS)
 
-        net = cv2.dnn.readNetFromCaffe(PROTOTXT, MODEL)
-        pts = np.load(POINTS)
+            # Load centers for ab channel quantization used for rebalancing.
+            class8 = net.getLayerId("class8_ab")
+            conv8 = net.getLayerId("conv8_313_rh")
+            pts = pts.transpose().reshape(2, 313, 1, 1)
+            net.getLayer(class8).blobs = [pts.astype("float32")]
+            net.getLayer(conv8).blobs = [np.full([1, 313], 2.606, dtype="float32")]
 
-        # Load centers for ab channel quantization used for rebalancing.
-        class8 = net.getLayerId("class8_ab")
-        conv8 = net.getLayerId("conv8_313_rh")
-        pts = pts.transpose().reshape(2, 313, 1, 1)
-        net.getLayer(class8).blobs = [pts.astype("float32")]
-        net.getLayer(conv8).blobs = [np.full([1, 313], 2.606, dtype="float32")]
+            image = cv2.cvtColor(np.array(self.image), cv2.COLOR_RGB2BGR)
+            scaled = image.astype("float32") / 255.0
+            lab = cv2.cvtColor(scaled, cv2.COLOR_BGR2LAB)
 
-        image = cv2.cvtColor(np.array(self.image), cv2.COLOR_RGB2BGR)
-        scaled = image.astype("float32") / 255.0
-        lab = cv2.cvtColor(scaled, cv2.COLOR_BGR2LAB)
+            resized = cv2.resize(lab, (224, 224))
+            L = cv2.split(resized)[0]
+            L -= 50
 
-        resized = cv2.resize(lab, (224, 224))
-        L = cv2.split(resized)[0]
-        L -= 50
+            net.setInput(cv2.dnn.blobFromImage(L))
+            ab = net.forward()[0, :, :, :].transpose((1, 2, 0))
+            ab = cv2.resize(ab, (image.shape[1], image.shape[0]))
 
-        net.setInput(cv2.dnn.blobFromImage(L))
-        ab = net.forward()[0, :, :, :].transpose((1, 2, 0))
-        ab = cv2.resize(ab, (image.shape[1], image.shape[0]))
+            L = cv2.split(lab)[0]
+            colorized = np.concatenate((L[:, :, np.newaxis], ab), axis=2)
 
-        L = cv2.split(lab)[0]
-        colorized = np.concatenate((L[:, :, np.newaxis], ab), axis=2)
+            colorized = cv2.cvtColor(colorized, cv2.COLOR_LAB2BGR)
+            colorized = np.clip(colorized, 0, 1)
 
-        colorized = cv2.cvtColor(colorized, cv2.COLOR_LAB2BGR)
-        colorized = np.clip(colorized, 0, 1)
+            colorized = (255 * colorized).astype("uint8")
+            colorized = cv2.cvtColor(colorized, cv2.COLOR_BGR2RGB)
+            colorized = Image.fromarray(colorized)
 
-        colorized = (255 * colorized).astype("uint8")
-        colorized = cv2.cvtColor(colorized, cv2.COLOR_BGR2RGB)
-        colorized = Image.fromarray(colorized)
-
-        return colorized
+            return colorized
+        except Exception as e:
+            print(f"Error colorizing image: {e}", file=sys.stderr)
+            return self.image

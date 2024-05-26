@@ -1,11 +1,12 @@
+import os
 import sys
 
 from PIL import Image
-import os
 
 class ImageSaveLoader:
-    def __init__(self, path):
+    def __init__(self, path, is_folder=False):
         self.path = path
+        self.is_folder = is_folder
 
     def load(self):
         """
@@ -25,18 +26,29 @@ class ImageSaveLoader:
         # Save the image with a new filename plus '_adjusted'
         if image:
             try:
-                # Determine the new file extension based on the format
                 if format:
                     extension = f".{format.lower()}"
                 else:
                     extension = os.path.splitext(filename)[1]
 
-                # Update the filename with the correct extension
-                new_filename = os.path.splitext(filename)[0] + "_adjusted" + extension
+                if self.is_folder:
+                    folder, file = os.path.split(filename)
+                    adjusted_folder = folder + "_adjusted"
 
-                # Save the image with the specified format
-                image.save(new_filename, format=format.upper() if format else None)
-                print(f"Image saved as {new_filename}")
+                    if not os.path.exists(adjusted_folder):
+                        os.makedirs(adjusted_folder)
+
+                    new_filename = os.path.join(adjusted_folder, file)
+
+                    image.save(new_filename, format=format.upper() if format else None)
+                    print(f"Image saved as {new_filename}")
+
+                else:
+                    folder, file = os.path.split(filename)
+                    new_filename = os.path.join(folder, file.split(".")[0] + "_adjusted" + extension)
+                    image.save(new_filename, format=format.upper() if format else None)
+                    print(f"Image saved as {new_filename}")
+
             except Exception as e:
                 print(f"Error saving image: {e}", file=sys.stderr)
 
