@@ -55,7 +55,7 @@ class ImgAdvancedOperations:
         Remove the background from the image.
         :return: The image with the background removed.
         """
-        removed_bg = remove(self.image).convert("RGB")
+        removed_bg = remove(self.image, bgcolor=(255, 255, 255, 0)).convert("RGBA")
 
         return removed_bg
 
