@@ -1,12 +1,14 @@
 import numbers
 import sys
+import os
 
 from PIL import Image
 
 
 class ImgBasicOperations:
-    def __init__(self, image):
+    def __init__(self, image, is_folder=False):
         self.image = image
+        self.is_folder = is_folder
 
     def crop(self, x, y, w, h):
         """
@@ -113,23 +115,47 @@ class ImgBasicOperations:
                 # Ensure PNG has transparency support
                 if image.mode != "RGBA":
                     image = image.convert("RGBA")
-            elif target_format == "GIF":
-                # GIF typically uses palette-based color modes
-                if image.mode != "P":
-                    image = image.convert("P", dither=Image.NONE)
+            # elif target_format == "GIF":
+            #     # GIF typically uses palette-based color modes
+            #     if image.mode != "P":
+            #         image = image.convert("P", dither=Image.NONE)
             elif target_format == "TIFF":
                 # Default TIFF to "RGB" to maintain compatibility
                 if image.mode not in ["RGB", "RGBA"]:
                     image = image.convert("RGB")
 
-            # Generate a new filename with the target format
-            new_filename = f"{image_path.split('.')[0]}_adjusted.{target_format.lower()}"
-
             # Save the converted image
-            image.save(new_filename)
-            print(f"Image saved as {new_filename}")
-
-            return new_filename
+            self.save_converted_image(image, image_path, target_format)
 
         except Exception as e:
             print(f"Error converting image: {e}", file=sys.stderr)
+
+    def save_converted_image(self, image, image_path, target_format):
+        """
+        Save the converted image based on whether it is a folder or a single file.
+        :param image: The converted PIL image.
+        :param image_path: The path of the original image.
+        :param target_format: The target format for saving.
+        """
+        try:
+            # Determine the new file extension based on the format
+            extension = f".{target_format.lower()}"
+
+            if self.is_folder:
+                folder, file = os.path.split(image_path)
+                adjusted_folder = folder + "_adjusted"
+
+                if not os.path.exists(adjusted_folder):
+                    os.makedirs(adjusted_folder)
+
+                new_filename = os.path.join(adjusted_folder, os.path.splitext(file)[0] + extension)
+            else:
+                folder, file = os.path.split(image_path)
+                new_filename = os.path.join(folder, os.path.splitext(file)[0] + "_adjusted" + extension)
+
+            # Save the image with the specified format
+            image.save(new_filename, format=target_format)
+            print(f"Image saved as {new_filename}")
+
+        except Exception as e:
+            print(f"Error saving image: {e}", file=sys.stderr)
