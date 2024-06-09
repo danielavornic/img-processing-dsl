@@ -5,3 +5,4 @@ rembg==2.0.56
 torch==2.3.0
 torchsr==1.0.4
 torchvision==0.18.0
+termcolor==2.4.0

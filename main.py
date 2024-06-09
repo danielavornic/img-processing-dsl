@@ -1,15 +1,15 @@
+from termcolor import colored
 
 from connectivity.CommandParser import CommandParser
 from connectivity.CommandVisitor import CommandVisitor
 from connectivity.CommandExecutor import CommandExecutor
 from connectivity.ImagePathVisitor import ImagePathVisitor
-from operations.ImgHelperOperations import ImgHelperOperations
+from operations.ImgHelperOperations import print_help
 
 
 class Main:
     def __init__(self):
         self.running = True
-        self.helper = ImgHelperOperations()
 
     def run(self):
         print("Enter your command (type 'imp help' for available commands)")
@@ -23,7 +23,11 @@ class Main:
                 break
 
             command_parser = CommandParser(user_input)
-            parse_tree = command_parser.parse()
+            parse_tree, error = command_parser.parse()
+
+            if error:
+                print(colored(error, "red", force_color='True'))
+                continue
 
             command_visitor = CommandVisitor()
             command_visitor.visit(parse_tree)
@@ -42,7 +46,7 @@ class Main:
                 path = folder_path
 
             if path is None and command_results[0] == "help":
-                self.helper.print_help()
+                print_help()
             else:
                 command_executor = CommandExecutor(command_results, path, is_folder=is_folder)
                 command_executor.execute()

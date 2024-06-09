@@ -1,7 +1,10 @@
 import os
 import sys
-
+from termcolor import colored
 from PIL import Image
+
+from operations.ImgHelperOperations import print_error, print_success
+
 
 class ImageSaveLoader:
     def __init__(self, path, is_folder=False):
@@ -16,11 +19,9 @@ class ImageSaveLoader:
             image = Image.open(self.path)
             return image
         except FileNotFoundError:
-            print(f"Error: File not found at {self.path}", file=sys.stderr)
-            return None
+            print_error(f"Error: File not found at {self.path}")
         except Exception as e:
-            print(f"Error loading image: {e}", file=sys.stderr)
-            return None
+            print_error(f"Error loading image at {self.path}: {e}")
 
     def save(self, image, filename, format=None):
         # Save the image with a new filename plus '_adjusted'
@@ -41,16 +42,14 @@ class ImageSaveLoader:
                     new_filename = os.path.join(adjusted_folder, file)
 
                     image.save(new_filename, format=format.upper() if format else None)
-                    print(f"Image saved as {new_filename}")
-
+                    print_success(f"Image saved as {new_filename}")
                 else:
                     folder, file = os.path.split(filename)
                     new_filename = os.path.join(folder, file.split(".")[0] + "_adjusted" + extension)
                     image.save(new_filename, format=format.upper() if format else None)
-                    print(f"Image saved as {new_filename}")
-
+                    print_success(f"Image saved as {new_filename}")
             except Exception as e:
-                print(f"Error saving image: {e}", file=sys.stderr)
+                print_error(f"Error saving image at {filename}: {e}")
 
     def set_path(self, new_path):
         """
