@@ -68,10 +68,18 @@ remBg: 'remBg';
 upscale: 'upscale' LEVEL NUMBER;
 
 imageArg: filePath | folderPath;
-// handle unix and windows paths
 
-filePath: APOS (DISK (BACKSLASH (ID | DIGIT)*)* | FORWARD_SLASH (ID | DIGIT | FORWARD_SLASH)*) DOT IMAGE_TYPE APOS;
-folderPath: APOS (DISK (BACKSLASH (ID BACKSLASH)+ ID) | FORWARD_SLASH (ID FORWARD_SLASH)+ ID) APOS;
+filePath:
+    APOS
+    ( (DOT)? (FORWARD_SLASH | BACKSLASH)? (ID | DIGIT | FORWARD_SLASH | BACKSLASH)*
+    | DISK (BACKSLASH (ID | DIGIT)*)* )
+    DOT IMAGE_TYPE
+    APOS;
+folderPath:
+    APOS
+    ( (DOT)? (FORWARD_SLASH | BACKSLASH)? (ID | DIGIT | FORWARD_SLASH | BACKSLASH)*
+    | DISK (BACKSLASH (ID | DIGIT)*)* )
+    APOS;
 COMMAND_RESULT: ID;
 
 // Tokens specific to commands

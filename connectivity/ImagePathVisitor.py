@@ -1,6 +1,6 @@
 from gen.ImgParser import ImgParser
 from gen.ImgVisitor import ImgVisitor
-
+import os
 
 class ImagePathVisitor(ImgVisitor):
     def __init__(self):
@@ -11,11 +11,13 @@ class ImagePathVisitor(ImgVisitor):
     def visitImage_param(self, ctx:ImgParser.Image_paramContext):
         img_param = ctx.getText().split("=")[1].split('"')[1]
 
-        if '.' in img_param and img_param[0] != '.':
-            self.image_path = img_param
+        absolute_path = os.path.abspath(img_param)
+
+        if os.path.isfile(absolute_path):
+            self.image_path = absolute_path
             return self.image_path
 
-        self.folder_path = img_param
+        self.folder_path = absolute_path
         return self.folder_path
 
     def get_folder_path(self):
