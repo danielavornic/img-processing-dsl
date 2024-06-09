@@ -11,7 +11,7 @@ CLOSED_PARAN: ')';
 OPEN: 'open';
 NUMBER: MINUS? DIGIT+;
 MINUS: '-';
-IMAGE_TYPE: 'png' | 'jpg' | 'bmp' | 'gif' | 'jpeg' | 'tiff' | 'webp';
+IMAGE_TYPE: 'png' | 'jpg' | 'bmp' | 'jpeg' | 'tiff' | 'webp';
 ID: (ALPHA | DIGIT | '_'|'-') (ALPHA | DIGIT | '_'|'-')*;
 WHITESPACE: [ \t\r\n]+ -> skip;
 BACKSLASH: '\\';
@@ -43,6 +43,9 @@ command:
     | threshold
     | reduceNoise
     | remBg
+    | cmyk
+    | rgb
+    | sepia
     | upscale;
         // enhance?
 
@@ -65,6 +68,9 @@ ft: 'ft' ;
 threshold: 'threshold'  LEVEL NUMBER;
 reduceNoise: 'reduceNoise';
 remBg: 'remBg';
+cmyk: 'cmyk';
+rgb: 'rgb';
+sepia: 'sepia';
 upscale: 'upscale' LEVEL NUMBER;
 
 imageArg: filePath | folderPath;

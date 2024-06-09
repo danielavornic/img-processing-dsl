@@ -154,6 +154,21 @@ class CommandExecutor:
                 self.update_img_operations()
                 if is_last_command:
                     img_save_loader.save(self.img, self.path)
+            elif command == "cmyk":
+                self.img = self.img_color_adjustments.cmyk()
+                self.update_img_operations()
+                if is_last_command:
+                    img_save_loader.save(self.img, self.path)
+            elif command == "rgb":
+                self.img = self.img_color_adjustments.rgb()
+                self.update_img_operations()
+                if is_last_command:
+                    img_save_loader.save(self.img, self.path)
+            elif command == "sepia":
+                self.img = self.img_color_adjustments.sepia()
+                self.update_img_operations()
+                if is_last_command:
+                    img_save_loader.save(self.img, self.path)
             # Advanced operations
             elif command == "compress":
                 self.img = self.img_advanced_operations.compress(self.image_format)
