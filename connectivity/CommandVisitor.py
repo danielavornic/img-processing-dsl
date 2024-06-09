@@ -84,3 +84,14 @@ class CommandVisitor(ImgVisitor):
         command = "colorize"
         self.command_results.append(command)
 
+    def visitCmyk(self, ctx:ImgParser.CmykContext):
+        command = "cmyk"
+        self.command_results.append(command)
+
+    def visitRgb(self, ctx:ImgParser.RgbContext):
+        command = "rgb"
+        self.command_results.append(command)
+
+    def visitSepia(self, ctx:ImgParser.SepiaContext):
+        command = "sepia"
+        self.command_results.append(command)
