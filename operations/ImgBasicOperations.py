@@ -1,8 +1,8 @@
 import numbers
-import sys
 import os
-
 from PIL import Image
+
+from operations.ImgHelperOperations import print_error, print_success
 
 
 class ImgBasicOperations:
@@ -28,9 +28,13 @@ class ImgBasicOperations:
         y2 = min(y + h, img_height)
 
         if x1 >= x2 or y1 >= y2:
-            print("Invalid cropping coordinates.", file=sys.stderr)
+            print_error("Invalid cropping coordinates. Please ensure the crop area is within the image bounds.", image)
+            return None
 
-        return image.crop((x1, y1, x2, y2))
+        try:
+            return image.crop((x1, y1, x2, y2))
+        except Exception as e:
+            print_error(f"Error cropping image: {e}", image)
 
     def rotate(self, angle):
         """
@@ -41,12 +45,14 @@ class ImgBasicOperations:
         image = self.image
 
         if not isinstance(angle, numbers.Number):
-            print("Angle must be an integer.", file=sys.stderr)
+            print_error("Angle must be a numeric value.", image)
+            return None
 
         try:
             return image.rotate(angle)
         except Exception as e:
-            print(f"Error rotating image: {e}", file=sys.stderr)
+            print_error(f"Error rotating image: {e}", image)
+
 
     def resize(self, w, h):
         """
@@ -58,16 +64,18 @@ class ImgBasicOperations:
         image = self.image
 
         if not isinstance(w, numbers.Number) or not isinstance(h, numbers.Number):
-            print("Width and height must be numeric values.", file=sys.stderr)
+            print_error("Width and height must be numeric values.", image)
+            return None
 
         if w <= 0 or h <= 0:
-            print("Width and height must be positive values.", file=sys.stderr)
-        else:
-            try:
-                resized_image = image.resize((int(w), int(h)))
-                return resized_image
-            except Exception as e:
-                print(f"Error resizing image: {e}", file=sys.stderr)
+            print_error("Width and height must be positive values.", image)
+            return None
+
+        try:
+            resized_image = image.resize((int(w), int(h)))
+            return resized_image
+        except Exception as e:
+            print_error(f"Error resizing image: {e}", image)
 
     def flipX(self):
         """
@@ -80,19 +88,17 @@ class ImgBasicOperations:
         try:
             return image.transpose(Image.FLIP_LEFT_RIGHT)
         except Exception as e:
-            print(f"Error flipping image horizontally: {e}", file=sys.stderr)
+            print_error(f"Error flipping image horizontally: {e}", image)
 
     def flipY(self):
         """
         Flip the image vertically (top to bottom).
         :return: The vertically flipped PIL image.
         """
-
-        image = self.image
         try:
-            return image.transpose(Image.FLIP_TOP_BOTTOM)
+            return self.image.transpose(Image.FLIP_TOP_BOTTOM)
         except Exception as e:
-            print(f"Error flipping image vertically: {e}", file=sys.stderr)
+            print_error(f"Error flipping image vertically: {e}", self.image)
 
     def convert(self, image_path, target_format):
         """
@@ -108,6 +114,7 @@ class ImgBasicOperations:
         try:
             # Apply specific conversions based on the target format
             if target_format == "JPG":
+                target_format = "JPEG"
                 # For "JPG", convert "RGBA" to "RGB" to avoid transparency issues
                 if image.mode in ["RGBA", "P"]:
                     image = image.convert("RGB")
@@ -115,10 +122,6 @@ class ImgBasicOperations:
                 # Ensure PNG has transparency support
                 if image.mode != "RGBA":
                     image = image.convert("RGBA")
-            # elif target_format == "GIF":
-            #     # GIF typically uses palette-based color modes
-            #     if image.mode != "P":
-            #         image = image.convert("P", dither=Image.NONE)
             elif target_format == "TIFF":
                 # Default TIFF to "RGB" to maintain compatibility
                 if image.mode not in ["RGB", "RGBA"]:
@@ -128,7 +131,7 @@ class ImgBasicOperations:
             self.save_converted_image(image, image_path, target_format)
 
         except Exception as e:
-            print(f"Error converting image: {e}", file=sys.stderr)
+            print_error(f"Error converting image: {e}", image)
 
     def save_converted_image(self, image, image_path, target_format):
         """
@@ -155,7 +158,7 @@ class ImgBasicOperations:
 
             # Save the image with the specified format
             image.save(new_filename, format=target_format)
-            print(f"Image saved as {new_filename}")
+            print_success(f"Image saved as {new_filename}")
 
         except Exception as e:
-            print(f"Error saving image: {e}", file=sys.stderr)
+            print_error(f"Error saving image: {e}", image)
