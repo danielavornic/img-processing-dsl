@@ -1,4 +1,3 @@
-import sys
 import os
 
 from operations.ImageSaveLoader import ImageSaveLoader
@@ -6,6 +5,7 @@ from operations.ImgBasicOperations import ImgBasicOperations
 from operations.ImgColorAdjustments import ImgColorAdjustments
 from operations.ImgAdvancedOperations import ImgAdvancedOperations
 from operations.ImgEnhancements import ImgEnhancements
+from operations.ImgHelperOperations import print_error, print_success
 
 
 class CommandExecutor:
@@ -24,7 +24,7 @@ class CommandExecutor:
             self.image_format = path.split(".")[-1]
 
     def update_img_operations(self):
-        self.img_basic_operations = ImgBasicOperations(self.img, is_folder=self.is_folder)
+        self.img_basic_operations = ImgBasicOperations(self.img, self.is_folder)
         self.img_enhancements = ImgEnhancements(self.img)
         self.img_color_adjustments = ImgColorAdjustments(self.img)
         self.img_advanced_operations = ImgAdvancedOperations(self.img)
@@ -40,17 +40,22 @@ class CommandExecutor:
         self.img = img_save_loader.load()
 
         if not self.img:
-            print("Image is None.", file=sys.stderr)
+            print_error(f"Image {self.path} is None.")
+            return None
 
         self.update_img_operations()
         self.process_commands(img_save_loader)
 
     def execute_folder(self):
+        if not os.path.exists(self.path):
+            print_error(f"Folder {self.path} does not exist.")
+            return None
+
         image_files = []
         for root, dirs, files in os.walk(self.path):
             for file in files:
                 if (file.endswith(".png") or file.endswith(".jpg") or file.endswith(".jpeg") or
-                        file.endswith(".webp") or file.endswith(".bmp")):
+                        file.endswith(".webp") or file.endswith(".bmp") or file.endswith(".tiff")):
                     image_files.append(os.path.join(root, file))
 
         adjusted_folder = self.path + "_adjusted"
@@ -64,12 +69,14 @@ class CommandExecutor:
             self.img = img_save_loader.load()
 
             if not self.img:
-                print(f"Image {image_file} is None.", file=sys.stderr)
+                print_error(f"Image {image_file} is None.")
                 continue
 
             self.update_img_operations()
             img_save_loader.set_path(os.path.join(adjusted_folder, image_file))
             self.process_commands(img_save_loader)
+
+        print_success("> All images have been processed!")
 
     def process_commands(self, img_save_loader):
         if any("convert" in command for command in self.command_results):

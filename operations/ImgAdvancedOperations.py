@@ -1,5 +1,3 @@
-import sys
-
 import torch
 from PIL import Image
 import io
@@ -10,6 +8,7 @@ from rembg import remove
 import torchsr
 import torchvision.transforms.functional as TF
 
+from operations.ImgHelperOperations import print_error
 
 # Model files for the colorization model
 script_dir = os.path.dirname(__file__)
@@ -31,46 +30,38 @@ class ImgAdvancedOperations:
         """
         image = self.image
 
-        image_format = image_format.upper()
-        if image_format not in Image.registered_extensions().values():
-            print(f"Unsupported image format for compression: {image_format}. It will be saved in the original format.", file=sys.stderr)
-            return image
-
         try:
             if image.mode in ('RGBA', 'LA'):
                 # Assuming a white background for images with transparency
                 background = Image.new('RGB', image.size, (255, 255, 255))
                 background.paste(image, mask=image.split()[3])  # 3 is the index of the alpha channel
                 image = background
-            elif image.mode != 'RGB' and image_format == 'JPEG':
-                image = image.convert('RGB')
 
             buffer = io.BytesIO()
-            image.save(buffer, format=image_format, optimize=True, quality=90)
+            image.save(buffer, format='PNG', optimize=True, quality=90)
             buffer.seek(0)
             compressed_image = Image.open(buffer)
 
             return compressed_image
 
         except Exception as e:
-            print(f"Error compressing image: {e}", file=sys.stderr)
-            return image
+            print_error(f"Error compressing image: {e}", self.image)
 
     def remBg(self):
         """
         Remove the background from the image.
         :return: The image with the background removed.
         """
+        extension = os.path.splitext(self.image.filename)[1]
         try:
-            if self.image.format not in ["JPEG", "JPG"]:
+            if extension == '.png' or extension == '.webp':
                 removed_bg = remove(self.image, bgcolor=(255, 255, 255, 0)).convert("RGBA")
             else:
                 removed_bg = remove(self.image, bgcolor=(255, 255, 255, 1)).convert("RGB")
             return removed_bg
 
         except Exception as e:
-            print(f"Error removing background: {e}", file=sys.stderr)
-            return self.image
+            print_error(f"Error removing background: {e}", self.image)
 
     def upscale(self, lvl):
         """
@@ -80,8 +71,8 @@ class ImgAdvancedOperations:
         """
 
         if lvl not in [1, 2, 4, 8]:
-            print("Scale factor must be a power of 2 (e.g., 1, 2, 4, 8).", file=sys.stderr)
-            return self.image
+            print_error("Scale factor must be a power of 2 (e.g., 1, 2, 4, 8).", self.image)
+            return None
 
         try:
             image_tensor = TF.to_tensor(self.image).unsqueeze(0)
@@ -94,8 +85,7 @@ class ImgAdvancedOperations:
             return upscaled_image
 
         except Exception as e:
-            print(f"Error upscaling image: {e}", file=sys.stderr)
-            return self.image
+            print_error(f"Error upscaling image: {e}", self.image)
 
     def colorize(self):
         """
@@ -137,5 +127,4 @@ class ImgAdvancedOperations:
 
             return colorized
         except Exception as e:
-            print(f"Error colorizing image: {e}", file=sys.stderr)
-            return self.image
+            print_error(f"Error colorizing image: {e}", self.image)
