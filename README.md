@@ -53,3 +53,7 @@ Note that the system recognizes the DSL's command if and only if it begins with 
 - **Color Adjustments**: adjusting the color properties like the brightness, negative contrast as well as transforming an image into black & white format.
 - **Advanced Operations**: providing advanced features like background removal, image compression, upscaling and colorization.
 - **Batch Processing**: allowing the user to apply the same operation to multiple images in a folder at once.
+
+## Demo
+
+<div style="max-width: 1280px"><div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"><iframe src="https://utm-my.sharepoint.com/personal/daniela_vornic_isa_utm_md/_layouts/15/embed.aspx?UniqueId=516797aa-ef62-485b-84ec-d9330216aa5e&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Atrue%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" width="1280" height="720" frameborder="0" scrolling="no" allowfullscreen title="DSL_Team08_Demo.mp4" style="border:none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; height: 100%; max-width: 100%;"></iframe></div></div>
